@@ -9,7 +9,11 @@ const initialForm = {
   kcal: 0,
 };
 
-const MealForm = () => {
+interface Props {
+  submitForm: (meal: IMealForm) => void;
+}
+
+const MealForm: React.FC<Props> = ({submitForm}) => {
  const [form, setForm] = useState<IMealForm>(initialForm);
  const select = [
    { category: "Breakfast" },
@@ -27,10 +31,16 @@ const MealForm = () => {
     setForm({ ...form, [name]: value });
   };
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submitForm({ ...form });
+    setForm({ ...initialForm });
+  };
+
 
 
   return (
-      <form >
+      <form onSubmit={onSubmit}>
         <Typography variant="h4" sx={{flexGrow: 1, textAlign: "center"}}>
           Edit pages
         </Typography>
