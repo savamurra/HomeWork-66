@@ -1,10 +1,13 @@
-
+import Navbar from '../../components/Navbar/Navbar.tsx';
 
 const Home = () => {
   return (
-    <div>
+    <>
+      <header>
+        <Navbar/>
+      </header>
 
-    </div>
+    </>
   );
 };
 
