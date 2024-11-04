@@ -30,6 +30,9 @@ const MealItem: React.FC<Props> = ({meal, onDeleteMeal}) => {
             <Typography gutterBottom sx={{ fontSize: 16 }}>
               <strong>Калории: {meal.kcal} kcal</strong>
             </Typography>
+            <Typography gutterBottom sx={{ fontSize: 16 }}>
+              <small>Время: {meal.dateTime}</small>
+            </Typography>
           </div>
           <div>
             <Button

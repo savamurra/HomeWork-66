@@ -5,11 +5,15 @@ import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosAPI from '../../axiosAPI.tsx';
 import Spinner from '../../components/UI/Spinner/Spinner.tsx';
+import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
+
 
 const initialForm = {
   time: "",
   description: "",
   kcal: 0,
+  dateTime: "",
 };
 
 const MealForm = () => {
@@ -46,7 +50,8 @@ const MealForm = () => {
     >,
   ) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+    setForm({ ...form, [name]: value,  dateTime: dayjs().format('YYYY-MM-DD HH:mm:ss') });
   };
 
   useEffect(() => {
@@ -64,10 +69,12 @@ const MealForm = () => {
       if (isEdit && params.idMeal) {
         setIsLoading(true);
         await axiosAPI.put(`meal/${params.idMeal}.json`, {...form});
+        toast.success('Meal edited successfully.');
       } else {
         setIsLoading(true);
         await axiosAPI.post(`meal.json`, {...form});
         navigate("/");
+        toast.success('Meal added successfully.');
       }
     } catch (e) {
       console.log(e);
