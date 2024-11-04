@@ -3,6 +3,7 @@ import { IMeal, IMealAPI } from "../../types";
 import axiosAPI from "../../axiosAPI.tsx";
 import Grid from "@mui/material/Grid2";
 import MealItem from "../../components/MealItem/MealItem.tsx";
+import { toast } from 'react-toastify';
 
 const Home = () => {
   const [meals, setMeals] = useState<IMeal[]>([]);
@@ -51,6 +52,7 @@ const Home = () => {
           setLoading(true);
           await axiosAPI.delete(`meal/${id}.json`);
           await fetchMeals();
+          toast.success("Meal deleted successfully.");
         }
       } catch (error) {
         console.error(error);
