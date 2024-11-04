@@ -18,7 +18,7 @@ const initialForm = {
 
 const MealForm = () => {
  const [form, setForm] = useState<IMealForm>(initialForm);
- const [isLoading, setIsLoading] = useState(false);
+ const [isLoading, setIsLoading] = useState<boolean>(false);
  const params = useParams<{idMeal: string}>();
  const [isEdit, setIsEdit] = useState<boolean>(false);
  const navigate = useNavigate();
@@ -98,6 +98,7 @@ const MealForm = () => {
               select
               label="Select"
               value={form.time}
+              required
               onChange={changeField}
             >
               {select.map((option) => (
@@ -117,6 +118,7 @@ const MealForm = () => {
               multiline
               rows={4}
               onChange={changeField}
+              required
             />
           </Grid>
           <Grid size={12}>
@@ -125,9 +127,15 @@ const MealForm = () => {
               id="outlined-basic"
               label="Kcal"
               name="kcal"
+              type='number'
               value={form.kcal}
               variant="outlined"
               onChange={changeField}
+              InputProps={{
+                inputProps: {
+                  min: 0,
+                }
+              }}
             />
           </Grid>
           <Grid size={12}>

@@ -2,14 +2,15 @@ import { IMeal } from '../../types';
 import React from 'react';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-// import { NavLink } from 'react-router-dom';
+import Spinner from '../UI/Spinner/Spinner.tsx';
 
 interface Props {
   meal: IMeal;
   onDeleteMeal: (id: string) => void;
+  deleteLoading: boolean;
 }
 
-const MealItem: React.FC<Props> = ({meal, onDeleteMeal}) => {
+const MealItem: React.FC<Props> = ({meal, onDeleteMeal,deleteLoading}) => {
   return (
     <>
       <Card sx={{ width: "100%" }}>
@@ -36,11 +37,18 @@ const MealItem: React.FC<Props> = ({meal, onDeleteMeal}) => {
           </div>
           <div>
             <Button
+              disabled={deleteLoading}
               size="small"
               color="warning"
+              variant="contained"
               onClick={() => onDeleteMeal(meal.id)}
             >
-              Delete
+              {deleteLoading ? (
+                <>
+                  <span style={{marginRight: '10px'}}>Delete</span>
+                  <Spinner/>
+                </>
+              ) : <span>Delete</span>}
             </Button>
             <Button
               size="small"
