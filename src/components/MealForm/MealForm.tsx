@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { IMealForm } from '../../types';
+import React, { useEffect, useState } from 'react';
+import {  IMealForm } from '../../types';
 import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
@@ -11,9 +11,10 @@ const initialForm = {
 
 interface Props {
   submitForm: (meal: IMealForm) => void;
+  mealToEdit?: IMealForm;
 }
 
-const MealForm: React.FC<Props> = ({submitForm}) => {
+const MealForm: React.FC<Props> = ({submitForm, mealToEdit}) => {
  const [form, setForm] = useState<IMealForm>(initialForm);
  const select = [
    { category: "Breakfast" },
@@ -31,12 +32,20 @@ const MealForm: React.FC<Props> = ({submitForm}) => {
     setForm({ ...form, [name]: value });
   };
 
+  useEffect(() => {
+    if (mealToEdit) {
+      setForm((prevState) => ({
+        ...prevState,
+        ...mealToEdit,
+      }));
+    }
+  }, [mealToEdit]);
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submitForm({ ...form });
     setForm({ ...initialForm });
   };
-
 
 
   return (

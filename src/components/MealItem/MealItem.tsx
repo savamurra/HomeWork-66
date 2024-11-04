@@ -1,13 +1,15 @@
 import { IMeal } from '../../types';
 import React from 'react';
 import { Button, Card, CardContent, Typography } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 // import { NavLink } from 'react-router-dom';
 
 interface Props {
   meal: IMeal;
+  onDeleteMeal: (id: string) => void;
 }
 
-const MealItem: React.FC<Props> = ({meal}) => {
+const MealItem: React.FC<Props> = ({meal, onDeleteMeal}) => {
   return (
     <>
       <Card sx={{ width: "100%" }}>
@@ -33,16 +35,17 @@ const MealItem: React.FC<Props> = ({meal}) => {
             <Button
               size="small"
               color="warning"
+              onClick={() => onDeleteMeal(meal.id)}
             >
               Delete
             </Button>
-            {/*<Button*/}
-            {/*  size="small"*/}
-            {/*  component={NavLink}*/}
-            {/*  to={`/quotes/${quote.id}/edit`}*/}
-            {/*>*/}
-            {/*  Edit*/}
-            {/*</Button>*/}
+            <Button
+              size="small"
+              component={NavLink}
+              to={`meals/${meal.id}/edit`}
+            >
+              Edit
+            </Button>
           </div>
         </CardContent>
       </Card>
