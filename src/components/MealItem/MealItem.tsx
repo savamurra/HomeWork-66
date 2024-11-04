@@ -25,10 +25,10 @@ const MealItem: React.FC<Props> = ({meal, onDeleteMeal}) => {
               {meal.time}
             </Typography>
             <Typography gutterBottom sx={{ fontSize: 16 }}>
-              <strong>Автор: {meal.description}</strong>
+              <strong>Ингридиенты: {meal.description}</strong>
             </Typography>
             <Typography gutterBottom sx={{ fontSize: 16 }}>
-              <strong>Автор: {meal.kcal}</strong>
+              <strong>Калории: {meal.kcal} kcal</strong>
             </Typography>
           </div>
           <div>

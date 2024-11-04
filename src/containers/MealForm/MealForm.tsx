@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { IMeal, IMealForm } from '../../types';
-import { Button, CircularProgress, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosAPI from '../../axiosAPI.tsx';
+import Spinner from '../../components/UI/Spinner/Spinner.tsx';
 
 const initialForm = {
   time: "",
@@ -13,6 +14,7 @@ const initialForm = {
 
 const MealForm = () => {
  const [form, setForm] = useState<IMealForm>(initialForm);
+ const [isLoading, setIsLoading] = useState(false);
  const params = useParams<{idMeal: string}>();
  const [isEdit, setIsEdit] = useState<boolean>(false);
  const navigate = useNavigate();
@@ -27,11 +29,14 @@ const MealForm = () => {
    try {
      const response: {data: IMeal} = await axiosAPI<IMeal>(`meal/${id}.json`);
      if (response.data) {
+       setIsLoading(true);
        setForm(response.data);
        setIsEdit(true);
      }
    } catch (e) {
      console.log(e);
+   } finally {
+     setIsLoading(false);
    }
  },[]);
 
@@ -47,6 +52,9 @@ const MealForm = () => {
   useEffect(() => {
     if (params.idMeal) {
       void fetchMeal(params.idMeal);
+    } else {
+      setForm(initialForm);
+      setIsEdit(false);
     }
   }, [fetchMeal, params.idMeal]);
 
@@ -54,15 +62,18 @@ const MealForm = () => {
     e.preventDefault();
     try {
       if (isEdit && params.idMeal) {
+        setIsLoading(true);
         await axiosAPI.put(`meal/${params.idMeal}.json`, {...form});
-        navigate("/");
       } else {
+        setIsLoading(true);
         await axiosAPI.post(`meal.json`, {...form});
+        navigate("/");
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setIsLoading(false);
     }
-    setForm({ ...initialForm });
   };
 
 
@@ -113,9 +124,9 @@ const MealForm = () => {
             />
           </Grid>
           <Grid size={12}>
-            <Button type="submit" variant="contained" sx={{width: "100%"}}>
-              {isEdit ? 'Edit' : 'Add'}
-              <CircularProgress />
+            <Button disabled={isLoading} type="submit" variant="contained" sx={{width: "100%"}}>
+              <span style={{ marginRight: "20px"}}>{isEdit ? 'Edit' : 'Add'}</span>
+              {isLoading ? <Spinner /> : null}
             </Button>
           </Grid>
         </Grid>
