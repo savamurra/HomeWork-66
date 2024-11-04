@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {  IMealForm } from '../../types';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { IMeal, IMealForm } from '../../types';
+import { Button, CircularProgress, MenuItem, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosAPI from '../../axiosAPI.tsx';
 
 const initialForm = {
   time: "",
@@ -9,19 +11,29 @@ const initialForm = {
   kcal: 0,
 };
 
-interface Props {
-  submitForm: (meal: IMealForm) => void;
-  mealToEdit?: IMealForm;
-}
-
-const MealForm: React.FC<Props> = ({submitForm, mealToEdit}) => {
+const MealForm = () => {
  const [form, setForm] = useState<IMealForm>(initialForm);
+ const params = useParams<{idMeal: string}>();
+ const [isEdit, setIsEdit] = useState<boolean>(false);
+ const navigate = useNavigate();
  const select = [
    { category: "Breakfast" },
    { category: "Snack" },
    { category: "Lunch" },
    { category: "Dinner" },
  ];
+
+ const fetchMeal = useCallback(async (id: string) => {
+   try {
+     const response: {data: IMeal} = await axiosAPI<IMeal>(`meal/${id}.json`);
+     if (response.data) {
+       setForm(response.data);
+       setIsEdit(true);
+     }
+   } catch (e) {
+     console.log(e);
+   }
+ },[]);
 
   const changeField = (
     e: React.ChangeEvent<
@@ -33,17 +45,23 @@ const MealForm: React.FC<Props> = ({submitForm, mealToEdit}) => {
   };
 
   useEffect(() => {
-    if (mealToEdit) {
-      setForm((prevState) => ({
-        ...prevState,
-        ...mealToEdit,
-      }));
+    if (params.idMeal) {
+      void fetchMeal(params.idMeal);
     }
-  }, [mealToEdit]);
+  }, [fetchMeal, params.idMeal]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitForm({ ...form });
+    try {
+      if (isEdit && params.idMeal) {
+        await axiosAPI.put(`meal/${params.idMeal}.json`, {...form});
+        navigate("/");
+      } else {
+        await axiosAPI.post(`meal.json`, {...form});
+      }
+    } catch (e) {
+      console.log(e);
+    }
     setForm({ ...initialForm });
   };
 
@@ -51,7 +69,7 @@ const MealForm: React.FC<Props> = ({submitForm, mealToEdit}) => {
   return (
       <form onSubmit={onSubmit}>
         <Typography variant="h4" sx={{flexGrow: 1, textAlign: "center"}}>
-          Edit pages
+          {isEdit ? 'Edit' : 'Add'} meals
         </Typography>
         <Grid container spacing={2} sx={{mx: "auto", width: "50%", mt: 4}}>
           <Grid size={12}>
@@ -96,7 +114,8 @@ const MealForm: React.FC<Props> = ({submitForm, mealToEdit}) => {
           </Grid>
           <Grid size={12}>
             <Button type="submit" variant="contained" sx={{width: "100%"}}>
-              Add
+              {isEdit ? 'Edit' : 'Add'}
+              <CircularProgress />
             </Button>
           </Grid>
         </Grid>
