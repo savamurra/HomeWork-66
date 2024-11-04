@@ -1,8 +1,8 @@
-import { IMeal } from '../../types';
-import React from 'react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import { NavLink } from 'react-router-dom';
-import Spinner from '../UI/Spinner/Spinner.tsx';
+import { IMeal } from "../../types";
+import React from "react";
+import { Button, Card, CardContent, Typography } from "@mui/material";
+import { NavLink } from "react-router-dom";
+import Spinner from "../UI/Spinner/Spinner.tsx";
 
 interface Props {
   meal: IMeal;
@@ -10,7 +10,7 @@ interface Props {
   deleteLoading: boolean;
 }
 
-const MealItem: React.FC<Props> = ({meal, onDeleteMeal,deleteLoading}) => {
+const MealItem: React.FC<Props> = ({ meal, onDeleteMeal, deleteLoading }) => {
   return (
     <>
       <Card sx={{ width: "100%" }}>
@@ -45,10 +45,12 @@ const MealItem: React.FC<Props> = ({meal, onDeleteMeal,deleteLoading}) => {
             >
               {deleteLoading ? (
                 <>
-                  <span style={{marginRight: '10px'}}>Delete</span>
-                  <Spinner/>
+                  <span style={{ marginRight: "10px" }}>Delete</span>
+                  <Spinner />
                 </>
-              ) : <span>Delete</span>}
+              ) : (
+                <span>Delete</span>
+              )}
             </Button>
             <Button
               size="small"
@@ -60,7 +62,6 @@ const MealItem: React.FC<Props> = ({meal, onDeleteMeal,deleteLoading}) => {
           </div>
         </CardContent>
       </Card>
-
     </>
   );
 };

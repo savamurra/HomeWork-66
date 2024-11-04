@@ -1,16 +1,20 @@
-import { Route, Routes } from 'react-router-dom';
-import Home from './containers/Home/Home.tsx';
-import MealForm from './components/MealForm/MealForm.tsx';
+import { Route, Routes } from "react-router-dom";
+import Home from "./containers/Home/Home.tsx";
+import MealForm from "./containers/MealForm/MealForm.tsx";
+import Layout from "./components/Layout/Layout.tsx";
 
 const App = () => {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path='/add/newMeal' element={<MealForm/>}/>
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/add" element={<MealForm />} />
+          <Route path="/meals/:idMeal/edit" element={<MealForm />} />
+        </Routes>
+      </Layout>
     </>
-    );
+  );
 };
 
 export default App;

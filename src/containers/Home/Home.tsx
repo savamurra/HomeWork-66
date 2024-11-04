@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
-import { IMeal, IMealAPI } from '../../types';
-import axiosAPI from '../../axiosAPI.tsx';
-import Grid from '@mui/material/Grid2';
-import MealItem from '../../components/MealItem/MealItem.tsx';
-
+import { useCallback, useEffect, useState } from "react";
+import { IMeal, IMealAPI } from "../../types";
+import axiosAPI from "../../axiosAPI.tsx";
+import Grid from "@mui/material/Grid2";
+import MealItem from "../../components/MealItem/MealItem.tsx";
 
 const Home = () => {
   const [meals, setMeals] = useState<IMeal[]>([]);
@@ -13,7 +12,8 @@ const Home = () => {
   const fetchMeals = useCallback(async () => {
     try {
       setLoading(true);
-      const response:{data: IMealAPI} = await axiosAPI<IMealAPI>('meal.json');
+      const response: { data: IMealAPI } =
+        await axiosAPI<IMealAPI>("meal.json");
       const mealList = response.data;
 
       if (mealList === null) {
@@ -33,7 +33,7 @@ const Home = () => {
         const totalCalories = mealFromAPI.reduce((acc, meal) => {
           acc += Number(meal.kcal) | 0;
           return acc;
-        },0);
+        }, 0);
         setTotal(totalCalories);
         setMeals(mealFromAPI);
       }
@@ -42,49 +42,44 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
+  }, []);
 
-  },[]);
-
-
-  const deleteMeal = useCallback (async (id: string) => {
-    try {
-      if (window.confirm('Are you sure you want to delete meal?')) {
-        setLoading(true);
-        await axiosAPI.delete(`meal/${id}.json`);
-        await fetchMeals();
+  const deleteMeal = useCallback(
+    async (id: string) => {
+      try {
+        if (window.confirm("Are you sure you want to delete meal?")) {
+          setLoading(true);
+          await axiosAPI.delete(`meal/${id}.json`);
+          await fetchMeals();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  },[fetchMeals]);
+    },
+    [fetchMeals],
+  );
 
   useEffect(() => {
     void fetchMeals();
-  },[fetchMeals]);
-
+  }, [fetchMeals]);
 
   return (
     <>
-        <>
-          <Grid container spacing={2}>
-            {meals.map((meal) => (
-              <MealItem
-                key={meal.id}
-                meal={meal}
-                onDeleteMeal={deleteMeal}
-                deleteLoading={loading}
-              />
-            ))}
-            <div>{total ? (
-              <>
-                Количество калорий: {total}
-              </>
-            ) : null}
-            </div>
-          </Grid>
-        </>
+      <>
+        <Grid container spacing={2}>
+          {meals.map((meal) => (
+            <MealItem
+              key={meal.id}
+              meal={meal}
+              onDeleteMeal={deleteMeal}
+              deleteLoading={loading}
+            />
+          ))}
+          <div>{total ? <>Общее количество калорий: {total} kcal</> : null}</div>
+        </Grid>
+      </>
     </>
   );
 };
